@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/api', function(req, res, next) {
-    res.status(200)
-      .json({
-        status: 'success',
-        message: 'test api!'
-      });
+  res.status(200)
+    .json({
+      status: 'success',
+      message: 'test api!'
+    });
 });
 
 // Postgres queries

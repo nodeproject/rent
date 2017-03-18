@@ -1,4 +1,5 @@
 var express     = require('express');
+var app         = express();
 var logger      = require('morgan');
 var bodyParser  = require('body-parser');
 
@@ -6,7 +7,6 @@ var api     =  require('./api/test/index');
 var auth    =  require('./api/auth/index');
 var config  = require('./api/config');
 
-var app = express();
 
 ///////////////////////
 // Server Middleware
@@ -37,7 +37,7 @@ app.use('/', api, auth);
 // Server Setup
 app.set("env", process.env.NODE_ENV || "development");
 app.set("host", process.env.HOST || "0.0.0.0");
-app.set("port", process.env.PORT || 4444);
+app.set("port", process.env.PORT || 8080);
 
 app.listen(app.get("port"), function () {
     console.log('\n' + '**********************************');

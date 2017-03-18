@@ -1,9 +1,10 @@
 var jwt     = require('jsonwebtoken');
 var config  = require('../config');
+var db      = require('../db');
 
 // Query Functions
 function getAllData(req, res, next) {
-  config.db.any('SELECT * FROM test')
+  db.any('SELECT * FROM test')
     .then(function (data) {
       res.status(200)
         .json({
@@ -20,7 +21,7 @@ function getAllData(req, res, next) {
 function getSingleData(req, res, next) {
   var id = parseInt(req.params.id);
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
-  config.db.one('SELECT * FROM test WHERE id = $1', id)
+  db.one('SELECT * FROM test WHERE id = $1', id)
     .then(function (data) {
       // decode token
       if (token) {
@@ -53,7 +54,7 @@ function getSingleData(req, res, next) {
 
 function createData(req, res, next) {
   req.body.launched = parseInt(req.body.launched);
-  config.db.none('INSERT INTO test(name, likes, description) values(${name}, ${likes}, ${description})', req.body)
+  db.none('INSERT INTO test(name, likes, description) values(${name}, ${likes}, ${description})', req.body)
     .then(function () {
       res.status(200)
         .json({
@@ -67,7 +68,7 @@ function createData(req, res, next) {
 }
 
 function updateData(req, res, next) {
-  config.db.none('UPDATE test SET name=$1, likes=$2, description=$3 where id=$4',
+  db.none('UPDATE test SET name=$1, likes=$2, description=$3 where id=$4',
     [req.body.name, parseInt(req.body.likes), req.body.description, parseInt(req.params.id)])
     .then(function () {
       res.status(200)
@@ -83,7 +84,7 @@ function updateData(req, res, next) {
 
 function removeData(req, res, next) {
   var id = parseInt(req.params.id);
-  config.db.result('DELETE FROM test WHERE id = $1', id)
+  db.result('DELETE FROM test WHERE id = $1', id)
     .then(function (result) {
       /* jshint ignore:start */
       res.status(200)

@@ -1,9 +1,10 @@
 var jwt     = require('jsonwebtoken');
 var config  = require('../config');
+var db      = require('../db');
 
 // find the user
 function findUser(req, res, next) {
-  config.db.one('SELECT * FROM users WHERE name = $1 AND password = $2', [req.body.name, req.body.password])
+  db.one('SELECT * FROM users WHERE name = $1 AND password = $2', [req.body.name, req.body.password])
     .then(function (user) {
       // check if password matches
       if (user.password != req.body.password) {
@@ -25,7 +26,7 @@ function findUser(req, res, next) {
     .catch(function (err) {
       return next(err);
     });
-}
+};
 
 module.exports = {
   findUser: findUser
