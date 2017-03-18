@@ -1,17 +1,21 @@
-var express = require('express');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+var express     = require('express');
+var logger      = require('morgan');
+var bodyParser  = require('body-parser');
 
-var api = require('./api/index');
+var api     =  require('./api/test/index');
+var auth    =  require('./api/auth/index');
+var config  = require('./api/config');
 
 var app = express();
-
 
 ///////////////////////
 // Server Middleware
 ///////////////////////
 
 app.use(logger(app.get("env") === "production" ? "combined" : "dev"));
+
+//set secret
+app.set('secret', config.secret); // secret variable
 
 // parse application/json
 app.use(bodyParser.json());
@@ -27,18 +31,10 @@ app.use(function(req, res, next) {
     next();
 });
 
-
-//////////////////
 // API Queries
-//////////////////
+app.use('/', api, auth);
 
-app.use('/', api);
-
-
-//////////////////
 // Server Setup
-//////////////////
-
 app.set("env", process.env.NODE_ENV || "development");
 app.set("host", process.env.HOST || "0.0.0.0");
 app.set("port", process.env.PORT || 4444);
